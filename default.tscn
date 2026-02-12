@@ -1,0 +1,117 @@
+[gd_scene load_steps=19 format=3 uid="uid://drpseimfdrby3"]
+
+[ext_resource type="Script" uid="uid://5pp58g7k8q6g" path="res://scripts/Player.cs" id="1_cegc5"]
+[ext_resource type="Script" uid="uid://rere8il8u38" path="res://states/player/PlayerStateMachine.cs" id="2_de8j7"]
+[ext_resource type="Script" uid="uid://obcpvcpc7wvu" path="res://states/player/Move.cs" id="3_erduv"]
+[ext_resource type="Script" uid="uid://beg0otfk7qy0b" path="res://states/player/Air.cs" id="4_erduv"]
+[ext_resource type="Script" uid="uid://u028qap6opf" path="res://states/player/Idle.cs" id="5_w0402"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cegc5"]
+size = Vector3(121.438286, 0.12194824, 69.23979)
+
+[sub_resource type="Gradient" id="Gradient_de8j7"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_koolx"]
+noise_type = 5
+seed = 115
+frequency = 1.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_erduv"]
+width = 392
+noise = SubResource("FastNoiseLite_koolx")
+color_ramp = SubResource("Gradient_de8j7")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w0402"]
+albedo_color = Color(0.56371826, 0.41130245, 0.39298055, 1)
+albedo_texture = SubResource("NoiseTexture2D_erduv")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_de8j7"]
+size = Vector3(0.4597931, 1, 0.36816406)
+
+[sub_resource type="Gradient" id="Gradient_cegc5"]
+offsets = PackedFloat32Array(0.00877193, 0.99122804)
+colors = PackedColorArray(0.12710992, 0.2206594, 0.5999743, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_de8j7"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_koolx"]
+noise = SubResource("FastNoiseLite_de8j7")
+color_ramp = SubResource("Gradient_cegc5")
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_erduv"]
+panorama = SubResource("NoiseTexture2D_koolx")
+
+[sub_resource type="Sky" id="Sky_w0402"]
+sky_material = SubResource("PanoramaSkyMaterial_erduv")
+
+[sub_resource type="Environment" id="Environment_d51dm"]
+background_mode = 2
+background_color = Color(0.1500645, 0.19927737, 0.22533655, 1)
+sky = SubResource("Sky_w0402")
+ambient_light_source = 3
+ambient_light_color = Color(0.24525875, 0.63690215, 0.6815077, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_w0402"]
+size = Vector3(5.2246094, 4.631836, 1)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Floor" type="RigidBody3D" parent="."]
+gravity_scale = 0.0
+lock_rotation = true
+freeze = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7413521, -0.06488037, -5.6048584)
+shape = SubResource("BoxShape3D_cegc5")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.77508545, -0.23492432, -5.842575)
+size = Vector3(121.8866, 0.53015137, 69.10878)
+material = SubResource("StandardMaterial3D_w0402")
+
+[node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("stateMachine", "camera") groups=["Player"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85073, 0)
+script = ExtResource("1_cegc5")
+stateMachine = NodePath("PlayerStateMachine")
+camera = NodePath("Camera3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.038383484, 0.019685745, -0.115722656)
+shape = SubResource("BoxShape3D_de8j7")
+debug_color = Color(0, 0.3372549, 0.4, 1)
+
+[node name="Camera3D" type="Camera3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.036681473, 0.5341835, -0.31525934)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.039009094, 0.020141602, -0.11683655)
+size = Vector3(0.44792175, 0.9938965, 0.35110474)
+
+[node name="PlayerStateMachine" type="Node" parent="Player" node_paths=PackedStringArray("InitialState") groups=["Player"]]
+script = ExtResource("2_de8j7")
+InitialState = NodePath("Idle")
+
+[node name="Move" type="Node" parent="Player/PlayerStateMachine"]
+script = ExtResource("3_erduv")
+
+[node name="Air" type="Node" parent="Player/PlayerStateMachine"]
+script = ExtResource("4_erduv")
+
+[node name="Idle" type="Node" parent="Player/PlayerStateMachine"]
+script = ExtResource("5_w0402")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_d51dm")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 22.587265, 0)
+light_energy = 8.275
+omni_range = 125.962845
+
+[node name="RigidBody3D" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5.0256386)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1123047, 1.815918, 0)
+shape = SubResource("BoxShape3D_w0402")

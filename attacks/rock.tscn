@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://qbmsyhx8ba6v"]
+
+[ext_resource type="Script" uid="uid://b7mtp4c6h3g0o" path="res://attacks/scripts/RockAttack.cs" id="1_4rsba"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4e10u"]
+
+[node name="Rock" type="Area3D"]
+script = ExtResource("1_4rsba")
+speed = 20.0
+maxDistance = 20.0
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0)
+shape = SubResource("BoxShape3D_4e10u")
+
+[connection signal="body_entered" from="." to="." method="Collide"]
