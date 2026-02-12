@@ -6,6 +6,8 @@ public partial class Attack: Area3D
     public float speed;
     [Export]
     public float maxDistance;
+    [Export]
+    public float gravity = 1.0f;
 
     protected Player player; 
     public Vector3 startPos;

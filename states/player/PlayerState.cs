@@ -13,9 +13,6 @@ public partial class PlayerState : State
 
 	protected Player player;
 
-	// FIX: when objects interact, it throws an error
-	// TODO: turn this into a proper attack system
-	//	- Attack should disappear upon collision
     public override void HandleInputs(InputEvent @event)
     {
 		if (@event.IsActionPressed("move_jump"))
