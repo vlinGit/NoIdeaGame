@@ -10,8 +10,15 @@ public partial class PlayerState : State
 	public Dictionary<int, PackedScene> attackMap = new Dictionary<int, PackedScene>();
 
 	public int curAttack = 0;
+	public Attack attack;
 
 	protected Player player;
+
+	void initAttack()
+	{
+		attack = attackMap[curAttack].Instantiate() as Attack;
+		attack.Enter(player);
+	}
 
     public override void HandleInputs(InputEvent @event)
     {
@@ -22,23 +29,16 @@ public partial class PlayerState : State
 
         if (@event.IsActionPressed("attack"))
 		{	
-			var attack = attackMap[curAttack].Instantiate() as Attack;
-			GetTree().Root.AddChild(attack);
-			attack.GlobalPosition = player.GlobalPosition;
-			attack.Enter(player);
+			attack.Trigger();
+			initAttack();
 		}
     }
 
-
     public override void _Ready()
     {
-        player = GetTree().GetFirstNodeInGroup("Player") as Player;
+        player = GetTree().GetFirstNodeInGroup("Player") as Player ?? throw new InvalidProgramException("Player was null during PlayerState type cast");
 
 		attackMap.Add(0, GD.Load<PackedScene>("res://attacks/rock.tscn"));
-		
-		if (player == null)
-		{
-			throw new InvalidProgramException("Player was null during PlayerState type cast");
-		}
+		initAttack();
     }   
 }
