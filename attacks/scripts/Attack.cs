@@ -14,9 +14,9 @@ public partial class Attack: Area3D
     [Export]
     public Vector3 offset; // offset for idle position, idle is the state after the pull out animation
     [Export]
-    public float blendFactor;
+    public float blendFactorIdleRotation;
     [Export]
-    public Vector3 independentAttackRotation;
+    public Vector3 offsetIdleRotation;
 
     protected Player player; 
     public Vector3 idlePosition;
@@ -38,20 +38,17 @@ public partial class Attack: Area3D
     
     public virtual void Idle(float delta)
     {
-        GlobalPosition = GlobalPosition.Lerp(idlePosition, speed / 2 * delta);
         Vector3 cameraEuler = player.camera.GlobalTransform.Basis.GetEuler();
         Vector3 currentEuler = GlobalRotation;
+        currentEuler.X = Mathf.LerpAngle(currentEuler.X, cameraEuler.X, blendFactorIdleRotation);
+        currentEuler.Y = Mathf.LerpAngle(currentEuler.Y, cameraEuler.Y, blendFactorIdleRotation);
+        currentEuler.Z = Mathf.LerpAngle(currentEuler.Z, cameraEuler.Z, blendFactorIdleRotation);
+        currentEuler.X += offsetIdleRotation.X * delta;
+        currentEuler.Y += offsetIdleRotation.Y * delta;
+        currentEuler.Z += offsetIdleRotation.Z * delta;
 
-        currentEuler.X = Mathf.LerpAngle(currentEuler.X, cameraEuler.X, blendFactor);
-        currentEuler.Y = Mathf.LerpAngle(currentEuler.Y, cameraEuler.Y, blendFactor);
-        currentEuler.Z = Mathf.LerpAngle(currentEuler.Z, cameraEuler.Z, blendFactor);
-
-        currentEuler.X += independentAttackRotation.X * delta;
-        currentEuler.Y += independentAttackRotation.Y * delta;
-        currentEuler.Z += independentAttackRotation.Z * delta;
-
-        // Apply rotation
         GlobalRotation = currentEuler;
+        GlobalPosition = GlobalPosition.Lerp(idlePosition, speed / 2 * delta);
     }
 
     public virtual void Move(float delta){}
