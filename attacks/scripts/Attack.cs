@@ -13,6 +13,10 @@ public partial class Attack: Area3D
     public Vector3 startOffset; // offset when the object is initially loaded, used for the pull out animation
     [Export]
     public Vector3 offset; // offset for idle position, idle is the state after the pull out animation
+    [Export]
+    public float blendFactor;
+    [Export]
+    public Vector3 independentAttackRotation;
 
     protected Player player; 
     public Vector3 idlePosition;
@@ -32,10 +36,22 @@ public partial class Attack: Area3D
 
     public virtual bool Trigger(){ return true; }
     
-    public virtual void Idle()
+    public virtual void Idle(float delta)
     {
-        Vector3 rotatedOffset = player.camera.GlobalTransform.Basis * offset;
-        idlePosition = player.GlobalPosition + rotatedOffset;
+        GlobalPosition = GlobalPosition.Lerp(idlePosition, speed / 2 * delta);
+        Vector3 cameraEuler = player.camera.GlobalTransform.Basis.GetEuler();
+        Vector3 currentEuler = GlobalRotation;
+
+        currentEuler.X = Mathf.LerpAngle(currentEuler.X, cameraEuler.X, blendFactor);
+        currentEuler.Y = Mathf.LerpAngle(currentEuler.Y, cameraEuler.Y, blendFactor);
+        currentEuler.Z = Mathf.LerpAngle(currentEuler.Z, cameraEuler.Z, blendFactor);
+
+        currentEuler.X += independentAttackRotation.X * delta;
+        currentEuler.Y += independentAttackRotation.Y * delta;
+        currentEuler.Z += independentAttackRotation.Z * delta;
+
+        // Apply rotation
+        GlobalRotation = currentEuler;
     }
 
     public virtual void Move(float delta){}
@@ -62,7 +78,9 @@ public partial class Attack: Area3D
 
     public override void _PhysicsProcess(double delta)
     {
-        Idle();
+        Vector3 rotatedOffset = player.camera.GlobalTransform.Basis * offset;
+        idlePosition = player.GlobalPosition + rotatedOffset;
+
         Move((float)delta);
     }
 }

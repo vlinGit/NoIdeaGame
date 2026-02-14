@@ -24,31 +24,19 @@ public partial class RockAttack : Attack
         return false;
     }
 
-    // Find a way so that this also rotates like it would if it was parented to the camera isntead of the world
-    void handleIdlePosition(float delta)
-    {
-        GD.Print(player.camera.GlobalTransform.Basis);
-        Quaternion fromBasis = new(Basis);
-        Quaternion toBasis = new(player.camera.GlobalTransform.Basis);
-        Quaternion newBasis = fromBasis.Slerp(toBasis, 0.5f);
-        Basis = new Basis(newBasis);
-
-        GlobalPosition = GlobalPosition.Lerp(idlePosition, speed/2 * delta);
-    }
-
     public override void Move(float delta)
     {
         switch (state)
         {
             case 0:
-                handleIdlePosition(delta);
+                Idle(delta);
                 if (GlobalPosition.DistanceTo(idlePosition) < 1f)
                 {
                     state = 1;
                 }
                 break;
             case 1:
-                handleIdlePosition(delta);
+                Idle(delta);
                 break;
             case 2:
                 RotateY(speed/2 * delta);
