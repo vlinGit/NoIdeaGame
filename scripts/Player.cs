@@ -1,4 +1,5 @@
 using Godot;
+using Godot.Collections;
 using System;
 
 public partial class Player : Character	{
@@ -10,7 +11,9 @@ public partial class Player : Character	{
 	[Export]
 	public PlayerStateMachine stateMachine;
 
-
+	public Dictionary<int, PackedScene> attackMap = new Dictionary<int, PackedScene>();
+	public Attack attack;
+	public int curAttack;
 	public int dashCount;
 	public float dashTimer;
 	public double delta;
@@ -42,12 +45,21 @@ public partial class Player : Character	{
 		}
 	}
 
+	public void initAttack()
+	{
+		attack = attackMap[curAttack].Instantiate() as Attack;
+		attack.Enter(this);
+	}
+
 	public override void _Ready()
 	{
 		base._Ready();
 		Input.MouseMode = Input.MouseModeEnum.Captured; //locks to window
 		dashCount = MaxDash;
 		dashTimer = DashCooldown;
+
+		attackMap.Add(0, GD.Load<PackedScene>("res://attacks/rock.tscn"));
+		initAttack();
 	}
 
 	public override void _Input(InputEvent @event)
