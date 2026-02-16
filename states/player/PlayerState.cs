@@ -9,26 +9,9 @@ public partial class PlayerState : State
 
 	public Dictionary<int, PackedScene> attackMap = new Dictionary<int, PackedScene>();
 
-	public int curAttack = 0;
 	public Attack attack;
 
 	protected Player player;
-
-    public override void HandleInputs(InputEvent @event)
-    {
-		if (@event.IsActionPressed("move_jump"))
-		{
-		    player.Jump();
-		}
-
-        if (@event.IsActionPressed("attack"))
-		{	
-			if (player.attack.Trigger())
-			{
-				player.initAttack();
-			}
-		}
-    }
 
     public override void _Ready()
     {

@@ -8,7 +8,7 @@ public partial class Attack: Area3D
     [Export]
     public float maxDistance;
     [Export]
-    public float gravity = 1.0f;
+    public float gravity = 1f;
     [Export]
     public Vector3 startOffset; // offset when the object is initially loaded, used for the pull out animation
     [Export]
@@ -17,6 +17,8 @@ public partial class Attack: Area3D
     public float blendFactorIdleRotation;
     [Export]
     public Vector3 offsetIdleRotation;
+    [Export]
+    public float idleSpeed;
 
     protected Player player; 
     public Vector3 idlePosition;
@@ -27,11 +29,12 @@ public partial class Attack: Area3D
     // 0 -> entering
     // 1 -> idle
     // 2 -> fired
-    public int state = 0; 
+    public int state;
 
     public virtual void Enter(Player newPlayer)
     {
         player = newPlayer ?? throw new InvalidProgramException("Failed Owner assignment to Player");
+        state = 0;
     }
 
     public virtual bool Trigger(){ return true; }
@@ -48,7 +51,7 @@ public partial class Attack: Area3D
         currentEuler.Z += offsetIdleRotation.Z * delta;
 
         GlobalRotation = currentEuler;
-        GlobalPosition = GlobalPosition.Lerp(idlePosition, speed / 2 * delta);
+        GlobalPosition = GlobalPosition.Lerp(idlePosition, idleSpeed * delta);
     }
 
     public virtual void Move(float delta){}

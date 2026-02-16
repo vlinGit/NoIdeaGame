@@ -72,10 +72,6 @@ public partial class Character : CharacterBody3D
 
 	public void Jump()
 	{
-		if (!IsOnFloor())
-		{
-			return;
-		}
 		velocity.Y = JumpVelocity;
 		updateVelocity();
 	}

@@ -3,6 +3,9 @@ using System;
 
 public partial class RockAttack : Attack
 {
+    [Export]
+    public float idleTolerance = 1f;
+
     public override void Enter (Player newPlayer)
     {
         base.Enter(newPlayer);
@@ -25,12 +28,12 @@ public partial class RockAttack : Attack
     }
 
     public override void Move(float delta)
-    {
+    {   
         switch (state)
         {
             case 0:
                 Idle(delta);
-                if (GlobalPosition.DistanceTo(idlePosition) < 1f)
+                if (GlobalPosition.DistanceTo(idlePosition) < idleTolerance)
                 {
                     state = 1;
                 }

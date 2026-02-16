@@ -74,6 +74,8 @@ material = SubResource("StandardMaterial3D_w0402")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85073, 0)
 script = ExtResource("1_cegc5")
 stateMachine = NodePath("PlayerStateMachine")
+attack_0Cooldown = 0.15
+attack_1Cooldown = 0.8
 camera = NodePath("Camera3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
