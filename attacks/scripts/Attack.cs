@@ -20,7 +20,7 @@ public partial class Attack: Area3D
     [Export]
     public float idleSpeed;
 
-    protected Player player; 
+    protected Character character; 
     public Vector3 idlePosition;
     public Vector3 startPos;
     public Vector3 direction;
@@ -31,9 +31,9 @@ public partial class Attack: Area3D
     // 2 -> fired
     public int state;
 
-    public virtual void Enter(Player newPlayer)
+    public virtual void Enter(Character newCharacter)
     {
-        player = newPlayer ?? throw new InvalidProgramException("Failed Owner assignment to Player");
+        character = newCharacter ?? throw new InvalidProgramException("Failed Owner assignment to Player");
         state = 0;
     }
 
@@ -41,7 +41,7 @@ public partial class Attack: Area3D
     
     public virtual void Idle(float delta)
     {
-        Vector3 cameraEuler = player.camera.GlobalTransform.Basis.GetEuler();
+        Vector3 cameraEuler = character.camera.GlobalTransform.Basis.GetEuler();
         Vector3 currentEuler = GlobalRotation;
         currentEuler.X = Mathf.LerpAngle(currentEuler.X, cameraEuler.X, blendFactorIdleRotation);
         currentEuler.Y = Mathf.LerpAngle(currentEuler.Y, cameraEuler.Y, blendFactorIdleRotation);
@@ -58,7 +58,7 @@ public partial class Attack: Area3D
     
     public virtual void Collide(Node3D body)
     {
-        if (state == 2 && player != null && player != body)
+        if (state == 2 && character != null && character != body)
         { 
             Delete();
         }
@@ -72,14 +72,14 @@ public partial class Attack: Area3D
 
     public override void _Ready()
     {
-        Vector3 rotatedOffset = player.camera.GlobalTransform.Basis * startOffset;
-        GlobalPosition = player.GlobalPosition + rotatedOffset;
+        Vector3 rotatedOffset = character.camera.GlobalTransform.Basis * startOffset;
+        GlobalPosition = character.GlobalPosition + rotatedOffset;
     }
 
     public override void _PhysicsProcess(double delta)
     {
-        Vector3 rotatedOffset = player.camera.GlobalTransform.Basis * offset;
-        idlePosition = player.GlobalPosition + rotatedOffset;
+        Vector3 rotatedOffset = character.camera.GlobalTransform.Basis * offset;
+        idlePosition = character.GlobalPosition + rotatedOffset;
 
         Move((float)delta);
     }

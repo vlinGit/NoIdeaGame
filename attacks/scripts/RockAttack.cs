@@ -6,10 +6,10 @@ public partial class RockAttack : Attack
     [Export]
     public float idleTolerance = 1f;
 
-    public override void Enter (Player newPlayer)
+    public override void Enter (Character newCharacter)
     {
-        base.Enter(newPlayer);
-        player.Owner.CallDeferred("add_child", this);
+        base.Enter(newCharacter);
+        character.Owner.CallDeferred("add_child", this);
     }
 
     public override bool Trigger()
@@ -17,7 +17,7 @@ public partial class RockAttack : Attack
         if (state == 1)
         {    
             state = 2;
-            direction = -player.camera.GlobalTransform.Basis.Z;
+            direction = -character.camera.GlobalTransform.Basis.Z;
             velocity = direction * speed;
             startPos = GlobalPosition;
             
