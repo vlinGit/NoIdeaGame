@@ -1,10 +1,15 @@
-[gd_scene load_steps=19 format=3 uid="uid://drpseimfdrby3"]
+[gd_scene load_steps=25 format=3 uid="uid://drpseimfdrby3"]
 
 [ext_resource type="Script" uid="uid://5pp58g7k8q6g" path="res://scripts/Player.cs" id="1_cegc5"]
 [ext_resource type="Script" uid="uid://rere8il8u38" path="res://states/player/PlayerStateMachine.cs" id="2_de8j7"]
 [ext_resource type="Script" uid="uid://obcpvcpc7wvu" path="res://states/player/Move.cs" id="3_erduv"]
 [ext_resource type="Script" uid="uid://beg0otfk7qy0b" path="res://states/player/Air.cs" id="4_erduv"]
 [ext_resource type="Script" uid="uid://u028qap6opf" path="res://states/player/Idle.cs" id="5_w0402"]
+[ext_resource type="Script" uid="uid://b4qyv6cr7i5si" path="res://scripts/EnemyPlayer.cs" id="6_ejkoe"]
+[ext_resource type="Script" uid="uid://bct668dmbgdqe" path="res://states/enemy/EnemyStateMachine.cs" id="7_i7bss"]
+[ext_resource type="Script" uid="uid://dm0fya0k0r36v" path="res://states/enemy/EnemyMove.cs" id="8_n2u70"]
+[ext_resource type="Script" uid="uid://b6m3m0jasf2l6" path="res://states/enemy/EnemyAir.cs" id="9_qfctx"]
+[ext_resource type="Script" uid="uid://ducsipj61737l" path="res://states/enemy/EnemyIdle.cs" id="10_rernc"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cegc5"]
 size = Vector3(121.438286, 0.12194824, 69.23979)
@@ -27,6 +32,9 @@ albedo_texture = SubResource("NoiseTexture2D_erduv")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_de8j7"]
 size = Vector3(0.4597931, 1, 0.36816406)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ejkoe"]
+albedo_color = Color(0.83333194, 0, 0.22858524, 1)
 
 [sub_resource type="Gradient" id="Gradient_cegc5"]
 offsets = PackedFloat32Array(0.00877193, 0.99122804)
@@ -102,6 +110,38 @@ script = ExtResource("4_erduv")
 
 [node name="Idle" type="Node" parent="Player/PlayerStateMachine"]
 script = ExtResource("5_w0402")
+
+[node name="EnemyPlayer" type="CharacterBody3D" parent="." node_paths=PackedStringArray("stateMachine", "camera") groups=["EnemyPlayer"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2332053, 1.85073, 0)
+script = ExtResource("6_ejkoe")
+stateMachine = NodePath("EnemyStateMachine")
+camera = NodePath("Camera3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EnemyPlayer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.038383484, 0.019685745, -0.115722656)
+shape = SubResource("BoxShape3D_de8j7")
+debug_color = Color(0, 0.3372549, 0.4, 1)
+
+[node name="Camera3D" type="Camera3D" parent="EnemyPlayer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.036681473, 0.5341835, -0.31525934)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="EnemyPlayer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.039009094, 0.020141602, -0.11683655)
+size = Vector3(0.44792175, 0.9938965, 0.35110474)
+material = SubResource("StandardMaterial3D_ejkoe")
+
+[node name="EnemyStateMachine" type="Node" parent="EnemyPlayer" node_paths=PackedStringArray("InitialState") groups=["EnemyPlayer"]]
+script = ExtResource("7_i7bss")
+InitialState = NodePath("Idle")
+
+[node name="Move" type="Node" parent="EnemyPlayer/EnemyStateMachine"]
+script = ExtResource("8_n2u70")
+
+[node name="Air" type="Node" parent="EnemyPlayer/EnemyStateMachine"]
+script = ExtResource("9_qfctx")
+
+[node name="Idle" type="Node" parent="EnemyPlayer/EnemyStateMachine"]
+script = ExtResource("10_rernc")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_d51dm")
