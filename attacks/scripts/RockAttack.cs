@@ -3,27 +3,54 @@ using System;
 
 public partial class RockAttack : Attack
 {
-    Vector3 direction;
-    
+    [Export]
+    public float idleTolerance = 1f;
+
     public override void Enter (Player newPlayer)
     {
-        player = newPlayer ?? throw new InvalidProgramException("Failed Owner assignment to Player");
-        direction = -player.camera.GlobalTransform.Basis.Z.Normalized();
-        startPos = GlobalPosition;
+        base.Enter(newPlayer);
+        player.Owner.CallDeferred("add_child", this);
     }
 
-    // TODO: add gravity
-    public override void Move(float delta)
+    public override bool Trigger()
     {
-        GlobalPosition += direction * speed * delta;
-        if (GlobalPosition.DistanceTo(startPos) > maxDistance)
-        {
-            Delete();
+        if (state == 1)
+        {    
+            state = 2;
+            direction = -player.camera.GlobalTransform.Basis.Z;
+            velocity = direction * speed;
+            startPos = GlobalPosition;
+            
+            return true;
         }
+        
+        return false;
     }
 
-    public override void _PhysicsProcess(double delta)
-    {
-        Move((float)delta);
+    public override void Move(float delta)
+    {   
+        switch (state)
+        {
+            case 0:
+                Idle(delta);
+                if (GlobalPosition.DistanceTo(idlePosition) < idleTolerance)
+                {
+                    state = 1;
+                }
+                break;
+            case 1:
+                Idle(delta);
+                break;
+            case 2:
+                RotateY(speed/2 * delta);
+                RotateZ(speed/2 * delta);
+                velocity.Y += -gravity * delta;
+                GlobalPosition += velocity * delta;
+                if (GlobalPosition.DistanceTo(startPos) > maxDistance)
+                {
+                    Delete();
+                }
+                break;
+        }
     }
 }
