@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using Godot;
 
 public partial class Attack: Area3D
@@ -23,12 +24,12 @@ public partial class Attack: Area3D
     protected Character character; 
     public Vector3 idlePosition;
     public Vector3 startPos;
+    public Vector3 endPos;
     public Vector3 direction;
     public Vector3 velocity;
 
-    // 0 -> entering
-    // 1 -> idle
-    // 2 -> fired
+    // 0 -> idle
+    // 1 -> fired
     public int state;
 
     public virtual void Enter(Character newCharacter)
@@ -37,7 +38,7 @@ public partial class Attack: Area3D
         state = 0;
     }
 
-    public virtual bool Trigger(){ return true; }
+    public virtual void Trigger(){ }
     
     public virtual void Idle(float delta)
     {
@@ -51,14 +52,14 @@ public partial class Attack: Area3D
         currentEuler.Z += offsetIdleRotation.Z * delta;
 
         GlobalRotation = currentEuler;
-        GlobalPosition = GlobalPosition.Lerp(idlePosition, idleSpeed * delta);
+        GlobalPosition = GlobalPosition.Lerp(idlePosition, 1 - Mathf.Exp(-idleSpeed * delta));
     }
 
     public virtual void Move(float delta){}
     
     public virtual void Collide(Node3D body)
     {
-        if (state == 2 && character != null && character != body)
+        if (state == 1 && character != null && character != body)
         { 
             Delete();
         }
@@ -66,7 +67,6 @@ public partial class Attack: Area3D
 
     public virtual void Delete()
     {
-        state = 3;
         QueueFree();
     }
 

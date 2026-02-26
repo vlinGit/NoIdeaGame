@@ -3,28 +3,27 @@ using System;
 
 public partial class RockAttack : Attack
 {
-    [Export]
-    public float idleTolerance = 1f;
-
     public override void Enter (Character newCharacter)
     {
         base.Enter(newCharacter);
         character.Owner.CallDeferred("add_child", this);
     }
 
-    public override bool Trigger()
+    public override void Trigger()
     {
-        if (state == 1)
-        {    
-            state = 2;
-            direction = -character.camera.GlobalTransform.Basis.Z;
-            velocity = direction * speed;
-            startPos = GlobalPosition;
-            
-            return true;
+        state = 1;
+        direction = -character.camera.GlobalTransform.Basis.Z;
+        velocity = direction * speed;
+        startPos = GlobalPosition;
+
+        if (character.ray.IsColliding())
+        {
+            endPos = character.ray.GetCollisionPoint();
         }
-        
-        return false;
+        else
+        {
+            endPos = startPos + (direction * maxDistance);
+        }
     }
 
     public override void Move(float delta)
@@ -33,24 +32,23 @@ public partial class RockAttack : Attack
         {
             case 0:
                 Idle(delta);
-                if (GlobalPosition.DistanceTo(idlePosition) < idleTolerance)
-                {
-                    state = 1;
-                }
                 break;
             case 1:
-                Idle(delta);
+                shoot(delta);
                 break;
-            case 2:
-                RotateY(speed/2 * delta);
-                RotateZ(speed/2 * delta);
-                velocity.Y += -gravity * delta;
-                GlobalPosition += velocity * delta;
-                if (GlobalPosition.DistanceTo(startPos) > maxDistance)
-                {
-                    Delete();
-                }
-                break;
+        }
+    }
+
+    private void shoot(float delta)
+    {
+        RotateY(speed/2 * delta);
+        RotateZ(speed/2 * delta);
+
+        GlobalPosition = GlobalPosition.MoveToward(endPos, speed * delta);
+        
+        if (GlobalPosition.DistanceTo(startPos) > maxDistance || GlobalPosition.DistanceTo(endPos) <= 0.01f)
+        {
+            Delete();
         }
     }
 }

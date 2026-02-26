@@ -31,6 +31,9 @@ public partial class Character : CharacterBody3D
 	[Export]
 	public PackedScene scene;
 
+	[Export]
+	public RayCast3D ray;
+
 	private float pitch = 0.0f;
 	private float minPitch = -90.0f;
 	private float maxPitch = 90.0f;

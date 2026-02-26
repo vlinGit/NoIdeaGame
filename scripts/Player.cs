@@ -58,8 +58,8 @@ public partial class Player : Character	{
 
 	public void switchAttack()
 	{
-		canAttack = true;
-		attackTimer = 0;
+		canAttack = false;
+		attackTimer = attackCooldownMap[curAttack];
 		attack.Delete();
 		initAttack();
 	}
@@ -135,8 +135,9 @@ public partial class Player : Character	{
 	{
 		computeCanAttack((float) delta);
 
-		if (Input.IsActionPressed("attack") && canAttack && attack.Trigger())
+		if (Input.IsActionPressed("attack") && canAttack)
 		{	
+			attack.Trigger();
 			attackTimer = attackCooldownMap[curAttack];
 			canAttack = false;
 			initAttack();

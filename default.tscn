@@ -70,13 +70,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.77508545, -0.23492432, -5.
 size = Vector3(121.8866, 0.53015137, 69.10878)
 material = SubResource("StandardMaterial3D_w0402")
 
-[node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("stateMachine", "camera") groups=["Player"]]
+[node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("stateMachine", "camera", "ray") groups=["Player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85073, 0)
 script = ExtResource("1_cegc5")
 stateMachine = NodePath("PlayerStateMachine")
-attack_0Cooldown = 0.15
+attack_0Cooldown = 0.35
 attack_1Cooldown = 0.8
 camera = NodePath("Camera3D")
+ray = NodePath("Camera3D/RayCast3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.038383484, 0.019685745, -0.115722656)
@@ -85,6 +86,10 @@ debug_color = Color(0, 0.3372549, 0.4, 1)
 
 [node name="Camera3D" type="Camera3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.036681473, 0.5341835, -0.31525934)
+
+[node name="RayCast3D" type="RayCast3D" parent="Player/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -0.00014533103, -0.0008480549, -0.019372404)
+target_position = Vector3(0, -100, 0)
 
 [node name="CSGBox3D" type="CSGBox3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.039009094, 0.020141602, -0.11683655)
@@ -117,3 +122,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5.0256386)
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1123047, 1.815918, 0)
 shape = SubResource("BoxShape3D_w0402")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0941772, 1.8095093, 0)
+size = Vector3(5.1883545, 4.6190186, 1)
