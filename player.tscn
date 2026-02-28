@@ -73,9 +73,9 @@ script = ExtResource("4_dw050")
 [node name="Idle" type="Node" parent="PlayerStateMachine"]
 script = ExtResource("5_b26j0")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="HUDCanvas" type="CanvasLayer" parent="."]
 
-[node name="Control" type="Control" parent="CanvasLayer"]
+[node name="Control" type="Control" parent="HUDCanvas"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -83,7 +83,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Crosshair" parent="CanvasLayer/Control" instance=ExtResource("6_dw050")]
+[node name="Crosshair" parent="HUDCanvas/Control" instance=ExtResource("6_dw050")]
 layout_mode = 1
 strokeWidth = 1.5
 radius = 15.0
@@ -91,25 +91,41 @@ color = Color(1, 1, 1, 1)
 centerDot = true
 centerDotRadius = 1.5
 
-[node name="Dash" parent="CanvasLayer/Control" node_paths=PackedStringArray("player") instance=ExtResource("6_2hs0m")]
+[node name="Dash" parent="HUDCanvas/Control" node_paths=PackedStringArray("player") instance=ExtResource("6_2hs0m")]
 layout_mode = 1
-offset_left = 7.0
-offset_top = 625.0
-offset_bottom = -6.0
+anchors_preset = 2
+anchor_top = 1.0
+anchor_right = 0.0
+offset_left = 14.0
+offset_top = -29.0
+offset_right = 14.0
+offset_bottom = -29.0
+grow_horizontal = 1
+grow_vertical = 0
 player = NodePath("../../..")
 
-[node name="Health" parent="CanvasLayer/Control" node_paths=PackedStringArray("player") instance=ExtResource("7_1jxqw")]
+[node name="Health" parent="HUDCanvas/Control" node_paths=PackedStringArray("player") instance=ExtResource("7_1jxqw")]
 layout_mode = 1
-offset_left = 7.0
-offset_top = 584.0
-offset_right = -818.0
-offset_bottom = -30.0
+anchors_preset = 2
+anchor_top = 1.0
+anchor_right = 0.0
+offset_left = 14.0
+offset_top = -71.0
+offset_right = 14.0
+offset_bottom = -71.0
+grow_horizontal = 1
+grow_vertical = 0
 player = NodePath("../../..")
 
-[node name="Loadout" parent="CanvasLayer/Control" node_paths=PackedStringArray("player") instance=ExtResource("11_bwjto")]
+[node name="Loadout" parent="HUDCanvas/Control" node_paths=PackedStringArray("player") instance=ExtResource("11_bwjto")]
 layout_mode = 1
-offset_left = 917.0
-offset_top = 573.0
-offset_right = -9.0
-offset_bottom = -6.0
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+offset_left = -241.0
+offset_top = -81.0
+offset_right = -241.0
+offset_bottom = -81.0
+grow_horizontal = 0
+grow_vertical = 0
 player = NodePath("../../..")

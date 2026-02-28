@@ -1,25 +1,6 @@
-[gd_scene load_steps=14 format=3 uid="uid://drpseimfdrby3"]
+[gd_scene load_steps=13 format=3 uid="uid://drpseimfdrby3"]
 
 [ext_resource type="PackedScene" uid="uid://rejb55mal201" path="res://player.tscn" id="1_cegc5"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_cegc5"]
-size = Vector3(121.438286, 0.12194824, 69.23979)
-
-[sub_resource type="Gradient" id="Gradient_de8j7"]
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_koolx"]
-noise_type = 5
-seed = 115
-frequency = 1.0
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_erduv"]
-width = 392
-noise = SubResource("FastNoiseLite_koolx")
-color_ramp = SubResource("Gradient_de8j7")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w0402"]
-albedo_color = Color(0.56371826, 0.41130245, 0.39298055, 1)
-albedo_texture = SubResource("NoiseTexture2D_erduv")
 
 [sub_resource type="Gradient" id="Gradient_cegc5"]
 offsets = PackedFloat32Array(0.00877193, 0.99122804)
@@ -27,27 +8,55 @@ colors = PackedColorArray(0.12710992, 0.2206594, 0.5999743, 1, 1, 1, 1, 1)
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_de8j7"]
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_koolx"]
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_cegc5"]
 noise = SubResource("FastNoiseLite_de8j7")
 color_ramp = SubResource("Gradient_cegc5")
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_erduv"]
-panorama = SubResource("NoiseTexture2D_koolx")
+panorama = SubResource("NoiseTexture2D_cegc5")
 
-[sub_resource type="Sky" id="Sky_w0402"]
+[sub_resource type="Sky" id="Sky_de8j7"]
 sky_material = SubResource("PanoramaSkyMaterial_erduv")
 
 [sub_resource type="Environment" id="Environment_d51dm"]
 background_mode = 2
 background_color = Color(0.1500645, 0.19927737, 0.22533655, 1)
-sky = SubResource("Sky_w0402")
+sky = SubResource("Sky_de8j7")
 ambient_light_source = 3
 ambient_light_color = Color(0.24525875, 0.63690215, 0.6815077, 1)
+reflected_light_source = 2
+ssao_enabled = true
+ssao_radius = 2.13
+ssao_intensity = 4.06
+ssao_power = 1.3995494
+fog_enabled = true
+fog_sky_affect = 0.292
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_cegc5"]
+dof_blur_far_distance = 40.0
+
+[sub_resource type="Compositor" id="Compositor_de8j7"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cegc5"]
+size = Vector3(121.438286, 0.12194824, 69.23979)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cegc5"]
+albedo_color = Color(0.5987678, 0.54311365, 0.48451322, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_w0402"]
 size = Vector3(5.2246094, 4.631836, 1)
 
 [node name="Node3D" type="Node3D"]
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.5635261, -0.7020949, 0.43531728, 0, 0.52695584, 0.8498927, -0.82609826, 0.47893673, -0.29695335, 0, 0, 0)
+shadow_enabled = true
+directional_shadow_max_distance = 148.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_d51dm")
+camera_attributes = SubResource("CameraAttributesPractical_cegc5")
+compositor = SubResource("Compositor_de8j7")
 
 [node name="Player" parent="." instance=ExtResource("1_cegc5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6869471, 0)
@@ -64,15 +73,7 @@ shape = SubResource("BoxShape3D_cegc5")
 [node name="CSGBox3D" type="CSGBox3D" parent="Floor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.77508545, -0.23492432, -5.842575)
 size = Vector3(121.8866, 0.53015137, 69.10878)
-material = SubResource("StandardMaterial3D_w0402")
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_d51dm")
-
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 22.587265, 0)
-light_energy = 8.275
-omni_range = 125.962845
+material = SubResource("StandardMaterial3D_cegc5")
 
 [node name="RigidBody3D" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5.0256386)

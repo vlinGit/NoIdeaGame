@@ -7,8 +7,8 @@
 [node name="Rock" type="Area3D"]
 gravity = 3.5
 script = ExtResource("1_4rsba")
-speed = 20.0
-maxDistance = 40.0
+speed = 30.0
+maxDistance = 60.0
 gravity = 3.5
 startOffset = Vector3(0.5, 0, -1)
 offset = Vector3(0.5, 0.25, -1)
