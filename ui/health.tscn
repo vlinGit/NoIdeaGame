@@ -1,0 +1,36 @@
+[gd_scene load_steps=3 format=3 uid="uid://c2iwsndcy1pnu"]
+
+[ext_resource type="Script" uid="uid://difdl75xntwjo" path="res://scripts/ui_Health.cs" id="1_lx6fu"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_wtytq"]
+font_size = 24
+font_color = Color(0.08468992, 0.08468992, 0.08468992, 1)
+
+[node name="Health" type="Control" node_paths=PackedStringArray("healthBar", "healthText")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -949.0
+offset_bottom = -631.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_lx6fu")
+healthBar = NodePath("Bar")
+healthText = NodePath("Label")
+
+[node name="Bar" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 329.0
+offset_bottom = 33.0
+tooltip_text = "
+"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 2.0
+offset_top = -2.0
+offset_right = 88.0
+offset_bottom = 38.0
+text = "100/100"
+label_settings = SubResource("LabelSettings_wtytq")

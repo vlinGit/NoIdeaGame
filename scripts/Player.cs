@@ -10,13 +10,10 @@ public partial class Player : Character	{
 	public float DashCooldown = 2.0f;
 	[Export]
 	public PlayerStateMachine stateMachine;
-	[Export]
-	public float attack_0Cooldown;
-	[Export]
-	public float attack_1Cooldown;
 
-	public Dictionary<int, PackedScene> attackMap;
-	public Dictionary<int, float> attackCooldownMap;
+	[Signal]
+	public delegate void AttackChangedEventHandler(AttackModel attackModel);
+
 	public Attack attack;
 	public int curAttack;
 	public float attackTimer;
@@ -52,16 +49,18 @@ public partial class Player : Character	{
 
 	public void initAttack()
 	{
-		attack = attackMap[curAttack].Instantiate() as Attack;
+		attack = attackMap[curAttack].packedScene.Instantiate() as Attack;
 		attack.Enter(this);
 	}
 
 	public void switchAttack()
 	{
+		attack?.Delete();
 		canAttack = false;
-		attackTimer = attackCooldownMap[curAttack];
-		attack.Delete();
+		attackTimer = attackMap[curAttack].cooldown;
 		initAttack();
+
+		EmitSignal(SignalName.AttackChanged, attackMap[curAttack]);
 	}
 
 	public void computeCanAttack(float delta)
@@ -74,7 +73,7 @@ public partial class Player : Character	{
 		if (attackTimer <= 0)
 		{
 			canAttack = true;
-			attackTimer = attackCooldownMap[curAttack];
+			attackTimer = attackMap[curAttack].cooldown;
 		}
 		else
 		{
@@ -88,17 +87,9 @@ public partial class Player : Character	{
 		Input.MouseMode = Input.MouseModeEnum.Captured; //locks to window
 		dashCount = MaxDash;
 		dashTimer = DashCooldown;
-		attackTimer = 0;
-		attackMap = [];
-		attackCooldownMap = [];
-		canAttack = true;
 		curAttack = 1;
 
-		attackMap.Add(0, GD.Load<PackedScene>("res://attacks/rock.tscn"));
-		attackMap.Add(1, GD.Load<PackedScene>("res://attacks/boulder.tscn"));
-		attackCooldownMap.Add(0, attack_0Cooldown);
-		attackCooldownMap.Add(1, attack_1Cooldown);
-		initAttack();
+		switchAttack();
 	}
 
 	public override void _Input(InputEvent @event)
@@ -138,7 +129,7 @@ public partial class Player : Character	{
 		if (Input.IsActionPressed("attack") && canAttack)
 		{	
 			attack.Trigger();
-			attackTimer = attackCooldownMap[curAttack];
+			attackTimer = attackMap[curAttack].cooldown;
 			canAttack = false;
 			initAttack();
 		}

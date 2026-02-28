@@ -17,6 +17,11 @@ public partial class Idle : PlayerState
                 player.updateVelocity();
             }
         }
+
+        if (@event.IsActionPressed("move_jump"))
+		{
+		    player.Jump();
+		}
     }
     public override void PhysicsUpdate(float delta)
     {

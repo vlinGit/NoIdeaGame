@@ -1,5 +1,5 @@
 using Godot;
-using System;
+using Godot.Collections;
 
 public partial class Character : CharacterBody3D
 {
@@ -7,6 +7,8 @@ public partial class Character : CharacterBody3D
 	public int Health = 100;
 	[Export]
 	public int MaxHealth = 100;
+	[Export]
+	public Dictionary<int, AttackModel> attackMap;
 
 	[Export]
 	public float Speed = 5.0f;
@@ -27,10 +29,6 @@ public partial class Character : CharacterBody3D
 	
 	[Export]
 	public Camera3D camera;
-
-	[Export]
-	public PackedScene scene;
-
 	[Export]
 	public RayCast3D ray;
 

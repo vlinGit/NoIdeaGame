@@ -1,0 +1,115 @@
+[gd_scene load_steps=18 format=3 uid="uid://rejb55mal201"]
+
+[ext_resource type="Script" uid="uid://5pp58g7k8q6g" path="res://scripts/Player.cs" id="1_sweqy"]
+[ext_resource type="Script" uid="uid://rere8il8u38" path="res://states/player/PlayerStateMachine.cs" id="2_2hs0m"]
+[ext_resource type="PackedScene" uid="uid://qbmsyhx8ba6v" path="res://attacks/rock.tscn" id="2_nvl01"]
+[ext_resource type="Script" uid="uid://obcpvcpc7wvu" path="res://states/player/Move.cs" id="3_1jxqw"]
+[ext_resource type="Script" uid="uid://c4pfr8cu7agld" path="res://classes/DataModels/AttackModel.cs" id="3_ivps1"]
+[ext_resource type="Texture2D" uid="uid://bymj0y7hme4xp" path="res://assets/rock.tres" id="4_bwjto"]
+[ext_resource type="Script" uid="uid://beg0otfk7qy0b" path="res://states/player/Air.cs" id="4_dw050"]
+[ext_resource type="PackedScene" uid="uid://2th2o6ruwm2" path="res://attacks/boulder.tscn" id="4_urp6f"]
+[ext_resource type="Script" uid="uid://u028qap6opf" path="res://states/player/Idle.cs" id="5_b26j0"]
+[ext_resource type="PackedScene" uid="uid://bvgdcr37qww7w" path="res://ui/dash.tscn" id="6_2hs0m"]
+[ext_resource type="Texture2D" uid="uid://gbyrj0v28mqa" path="res://assets/boulder.tres" id="6_606se"]
+[ext_resource type="PackedScene" uid="uid://o7c734msx0bk" path="res://ui/crosshair.tscn" id="6_dw050"]
+[ext_resource type="PackedScene" uid="uid://c2iwsndcy1pnu" path="res://ui/health.tscn" id="7_1jxqw"]
+[ext_resource type="PackedScene" uid="uid://bald5ttbgv672" path="res://ui/loadout.tscn" id="11_bwjto"]
+
+[sub_resource type="Resource" id="Resource_bwjto"]
+script = ExtResource("3_ivps1")
+name = "rock"
+cooldown = 0.35
+thumbnail = ExtResource("4_bwjto")
+packedScene = ExtResource("2_nvl01")
+metadata/_custom_type_script = "uid://c4pfr8cu7agld"
+
+[sub_resource type="Resource" id="Resource_606se"]
+script = ExtResource("3_ivps1")
+name = "boulder"
+cooldown = 0.8
+thumbnail = ExtResource("6_606se")
+packedScene = ExtResource("4_urp6f")
+metadata/_custom_type_script = "uid://c4pfr8cu7agld"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sweqy"]
+size = Vector3(0.4597931, 1, 0.36816406)
+
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("stateMachine", "camera", "ray") groups=["Player"]]
+script = ExtResource("1_sweqy")
+stateMachine = NodePath("PlayerStateMachine")
+attackMap = Dictionary[int, Object]({
+0: SubResource("Resource_bwjto"),
+1: SubResource("Resource_606se")
+})
+camera = NodePath("Camera3D")
+ray = NodePath("Camera3D/RayCast3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.038383484, 0.019685745, -0.115722656)
+shape = SubResource("BoxShape3D_sweqy")
+debug_color = Color(0, 0.3372549, 0.4, 1)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.036681473, 0.5341835, -0.31525934)
+
+[node name="RayCast3D" type="RayCast3D" parent="Camera3D"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -0.00014533103, -0.0008480549, -0.019372404)
+target_position = Vector3(0, -100, 0)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.039009094, 0.020141602, -0.11683655)
+size = Vector3(0.44792175, 0.9938965, 0.35110474)
+
+[node name="PlayerStateMachine" type="Node" parent="." node_paths=PackedStringArray("InitialState") groups=["Player"]]
+script = ExtResource("2_2hs0m")
+InitialState = NodePath("Idle")
+
+[node name="Move" type="Node" parent="PlayerStateMachine"]
+script = ExtResource("3_1jxqw")
+
+[node name="Air" type="Node" parent="PlayerStateMachine"]
+script = ExtResource("4_dw050")
+
+[node name="Idle" type="Node" parent="PlayerStateMachine"]
+script = ExtResource("5_b26j0")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Crosshair" parent="CanvasLayer/Control" instance=ExtResource("6_dw050")]
+layout_mode = 1
+strokeWidth = 1.5
+radius = 15.0
+color = Color(1, 1, 1, 1)
+centerDot = true
+centerDotRadius = 1.5
+
+[node name="Dash" parent="CanvasLayer/Control" node_paths=PackedStringArray("player") instance=ExtResource("6_2hs0m")]
+layout_mode = 1
+offset_left = 7.0
+offset_top = 625.0
+offset_bottom = -6.0
+player = NodePath("../../..")
+
+[node name="Health" parent="CanvasLayer/Control" node_paths=PackedStringArray("player") instance=ExtResource("7_1jxqw")]
+layout_mode = 1
+offset_left = 7.0
+offset_top = 584.0
+offset_right = -818.0
+offset_bottom = -30.0
+player = NodePath("../../..")
+
+[node name="Loadout" parent="CanvasLayer/Control" node_paths=PackedStringArray("player") instance=ExtResource("11_bwjto")]
+layout_mode = 1
+offset_left = 917.0
+offset_top = 573.0
+offset_right = -9.0
+offset_bottom = -6.0
+player = NodePath("../../..")

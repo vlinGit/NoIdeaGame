@@ -1,0 +1,52 @@
+[gd_scene load_steps=5 format=3 uid="uid://bald5ttbgv672"]
+
+[ext_resource type="Script" uid="uid://b8b5dqtql5i2d" path="res://scripts/ui_Loadout.cs" id="1_q70c2"]
+[ext_resource type="Texture2D" uid="uid://bymj0y7hme4xp" path="res://assets/rock.tres" id="2_t84r8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q70c2"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_t84r8"]
+font_size = 26
+
+[node name="Loadout" type="Control" node_paths=PackedStringArray("name", "thumbnail")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_q70c2")
+name = NodePath("name")
+thumbnail = NodePath("thumbnail")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 226.0
+offset_bottom = 68.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_q70c2")
+
+[node name="name" type="Label" parent="."]
+layout_mode = 0
+offset_left = 17.0
+offset_top = 15.0
+offset_right = 111.0
+offset_bottom = 52.0
+text = "Attack"
+label_settings = SubResource("LabelSettings_t84r8")
+
+[node name="thumbnail" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 159.0
+offset_top = 9.0
+offset_right = 259.0
+offset_bottom = 109.0
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_t84r8")
+expand_mode = 1
+stretch_mode = 1

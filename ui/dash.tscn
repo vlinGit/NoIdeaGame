@@ -1,0 +1,25 @@
+[gd_scene load_steps=2 format=3 uid="uid://bvgdcr37qww7w"]
+
+[ext_resource type="Script" uid="uid://bo0tupjg7e3bn" path="res://scripts/ui_dash.cs" id="1_fsfn7"]
+
+[node name="Dash" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -824.0
+offset_bottom = -632.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_fsfn7")
+
+[node name="dash1" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 160.0
+offset_bottom = 16.0
+
+[node name="dash2" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 168.0
+offset_right = 328.0
+offset_bottom = 16.0
